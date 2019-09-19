@@ -21,12 +21,22 @@ export default class Controller {
 
 		const ground = this.world.createBody({
 			type: 'static',
-			position: Vec2(0, M_FROM_PX * -1 * PX_SIZE),
+			position: Vec2(0, 0),
 		});
 		ground.createFixture({
 			shape: Edge(
-				Vec2(M_FROM_PX * -2 * PX_SIZE, 0.0),
-				Vec2(M_FROM_PX * 2 * PX_SIZE, 0.0))
+				Vec2(M_FROM_PX * -2 * PX_SIZE, -M_FROM_PX * PX_SIZE),
+				Vec2(M_FROM_PX * 2 * PX_SIZE, -M_FROM_PX * PX_SIZE))
+		});
+		ground.createFixture({
+			shape: Edge(
+				Vec2(-M_FROM_PX * PX_SIZE, M_FROM_PX * -2 * PX_SIZE),
+				Vec2(-M_FROM_PX * PX_SIZE, M_FROM_PX * 2 * PX_SIZE))
+		});
+		ground.createFixture({
+			shape: Edge(
+				Vec2(M_FROM_PX * PX_SIZE, M_FROM_PX * -2 * PX_SIZE),
+				Vec2(M_FROM_PX * PX_SIZE, M_FROM_PX * 2 * PX_SIZE))
 		});
 	}
 
