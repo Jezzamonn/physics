@@ -59,5 +59,7 @@
     "webpack-cli": "^3.3.11",
     "webpack-node-externals": "^1.7.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "planck-js": "^0.3.10"
+  }
 }
