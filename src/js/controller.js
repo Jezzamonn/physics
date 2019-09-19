@@ -62,7 +62,14 @@ export default class Controller {
 		if (this.numSteps % 10 == 0) {
 			const circleBody = this.world.createBody({
 				type: 'dynamic',
-				position: Vec2(slurp(-2, 2, Math.random()), 2)
+				position: Vec2(
+					slurp(
+						-M_FROM_PX * PX_SIZE + 0.2,
+						M_FROM_PX * PX_SIZE - 0.2,
+						Math.random()
+					),
+					M_FROM_PX * 1.1 * PX_SIZE
+				)
 			});
 			circleBody.createFixture(
 				Circle(0.2), {
