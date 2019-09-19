@@ -1,6 +1,11 @@
 import { World, Vec2, Edge, Circle } from "planck-js";
 import { slurp } from './util';
 
+const PX_FROM_M = 50;
+const M_FROM_PX = 1 / PX_FROM_M;
+const PX_SIZE = 250;
+const PX_WORLD_BOUNDARY = 1.2 * PX_SIZE;
+
 export default class Controller {
 
 	constructor() {
@@ -16,10 +21,12 @@ export default class Controller {
 
 		const ground = this.world.createBody({
 			type: 'static',
-			position: Vec2(0, -2),
+			position: Vec2(0, M_FROM_PX * -1 * PX_SIZE),
 		});
 		ground.createFixture({
-			shape: Edge(Vec2(-40.0, 0.0), Vec2(40.0, 0.0))
+			shape: Edge(
+				Vec2(M_FROM_PX * -2 * PX_SIZE, 0.0),
+				Vec2(M_FROM_PX * 2 * PX_SIZE, 0.0))
 		});
 	}
 
@@ -56,13 +63,26 @@ export default class Controller {
 		this.world.step(this.stepTime);
 	}
 
+	removeFarAwayThings() {
+		for (var body = this.world.getBodyList(); body; body = body.getNext()) {
+			const position = body.getPosition();
+			if (position.x < -M_FROM_PX * PX_WORLD_BOUNDARY || 
+				position.x > M_FROM_PX * PX_WORLD_BOUNDARY || 
+				position.y < -M_FROM_PX * PX_WORLD_BOUNDARY || 
+				position.y > M_FROM_PX * PX_WORLD_BOUNDARY) {
+				// This is fine during the loop, thanks to how box2d uses linked-lists
+				this.world.destroyBody(body);
+			}
+		}
+	}
+
 	/**
 	 * Render the current state of the controller.
 	 *
 	 * @param {!CanvasRenderingContext2D} context
 	 */
 	render(context) {
-		context.scale(50, -50);
+		context.scale(PX_FROM_M, -PX_FROM_M);
 		for (var body = this.world.getBodyList(); body; body = body.getNext()) {
 			const bodyPos = body.getPosition();
 			for (var fixture = body.getFixtureList(); fixture; fixture = fixture.getNext()) {
