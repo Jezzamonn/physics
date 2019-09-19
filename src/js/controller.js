@@ -5,7 +5,7 @@ export default class Controller {
 
 	constructor() {
 		this.animAmt = 0;
-		this.period = 3;
+		this.period = 10;
 
 		this.lastStep = 0;
 		this.timeCount = 0;
@@ -47,7 +47,11 @@ export default class Controller {
 				type: 'dynamic',
 				position: Vec2(slurp(-0.1, 0.1, Math.random()), 2)
 			});
-			circleBody.createFixture(Circle(0.2), {density: 1});
+			circleBody.createFixture(
+				Circle(0.2), {
+					density: 1,
+					restitution: 0.2,
+				});
 		}
 		this.world.step(this.stepTime);
 	}
