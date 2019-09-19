@@ -66,7 +66,7 @@ export default class Controller {
 	}
 
 	addCircle() {
-		const m_radius = M_FROM_PX * 50;
+		const m_radius = M_FROM_PX * PX_SIZE / 10;
 		const circleBody = this.world.createBody({
 			type: 'dynamic',
 			position: Vec2(
@@ -81,7 +81,7 @@ export default class Controller {
 		circleBody.createFixture(
 			Circle(m_radius), {
 				density: 1,
-				restitution: 0.7,
+				restitution: 0.2,
 			});
 	}
 
