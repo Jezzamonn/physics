@@ -1,4 +1,5 @@
 import { World, Vec2, Edge, Circle } from "planck-js";
+import { slurp } from './util';
 
 export default class Controller {
 
@@ -15,7 +16,7 @@ export default class Controller {
 
 		const ground = this.world.createBody({
 			type: 'static',
-			position: Vec2(0, -10),
+			position: Vec2(0, -2),
 		});
 		ground.createFixture({
 			shape: Edge(Vec2(-40.0, 0.0), Vec2(40.0, 0.0))
@@ -41,9 +42,12 @@ export default class Controller {
 	}
 
 	physicsStep() {
-		if (this.numSteps % 60 == 0) {
-			const circleBody = this.world.createBody({type: 'dynamic', position: Vec2(Math.random(), 10)});
-			circleBody.createFixture(Circle(1), {density: 1});
+		if (this.numSteps % 20 == 0) {
+			const circleBody = this.world.createBody({
+				type: 'dynamic',
+				position: Vec2(slurp(-0.1, 0.1, Math.random()), 2)
+			});
+			circleBody.createFixture(Circle(0.2), {density: 1});
 		}
 		this.world.step(this.stepTime);
 	}
@@ -54,7 +58,7 @@ export default class Controller {
 	 * @param {!CanvasRenderingContext2D} context
 	 */
 	render(context) {
-		context.scale(10, -10);
+		context.scale(50, -50);
 		for (var body = this.world.getBodyList(); body; body = body.getNext()) {
 			const bodyPos = body.getPosition();
 			for (var fixture = body.getFixtureList(); fixture; fixture = fixture.getNext()) {
