@@ -42,7 +42,7 @@ export default class Controller {
 
 	physicsStep() {
 		if (this.numSteps % 60 == 0) {
-			const circleBody = this.world.createBody({type: 'dynamic', position: Vec2(0, 10)});
+			const circleBody = this.world.createBody({type: 'dynamic', position: Vec2(Math.random(), 10)});
 			circleBody.createFixture(Circle(1), {density: 1});
 		}
 		this.world.step(this.stepTime);
