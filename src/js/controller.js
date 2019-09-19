@@ -60,24 +60,29 @@ export default class Controller {
 
 	physicsStep() {
 		if (this.numSteps % 10 == 0) {
-			const circleBody = this.world.createBody({
-				type: 'dynamic',
-				position: Vec2(
-					slurp(
-						-M_FROM_PX * PX_SIZE + 0.2,
-						M_FROM_PX * PX_SIZE - 0.2,
-						Math.random()
-					),
-					M_FROM_PX * 1.1 * PX_SIZE
-				)
-			});
-			circleBody.createFixture(
-				Circle(0.2), {
-					density: 1,
-					restitution: 0.7,
-				});
+			this.addCircle();
 		}
 		this.world.step(this.stepTime);
+	}
+
+	addCircle() {
+		const m_radius = M_FROM_PX * 50;
+		const circleBody = this.world.createBody({
+			type: 'dynamic',
+			position: Vec2(
+				slurp(
+					-M_FROM_PX * PX_SIZE + m_radius,
+					M_FROM_PX * PX_SIZE - m_radius,
+					Math.random()
+				),
+				M_FROM_PX * 1.1 * PX_SIZE
+			)
+		});
+		circleBody.createFixture(
+			Circle(m_radius), {
+				density: 1,
+				restitution: 0.7,
+			});
 	}
 
 	removeFarAwayThings() {
