@@ -32,7 +32,7 @@ export default class Controller {
 			const amt = i / (2 * SHAPES_PER_ROW);
 			const point = Vec2(
 				slurp(-M_FROM_PX * PX_SIZE, M_FROM_PX * PX_SIZE, amt),
-				-M_FROM_PX * PX_SIZE + isEven ? 0 : M_SHAPE_OUTER_RADIUS / 2
+				-M_FROM_PX * PX_SIZE + (isEven ? 0 : M_SHAPE_OUTER_RADIUS / 2)
 			);
 			bottomEdgeVecs.push(point);
 		}
@@ -72,6 +72,7 @@ export default class Controller {
 			this.lastStep += this.stepTime;
 			this.numSteps ++;
 		}
+		this.lastStep = Math.ceil(this.timeCount / this.stepTime) * this.stepTime;
 	}
 
 	physicsStep() {
