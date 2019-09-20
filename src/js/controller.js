@@ -1,4 +1,4 @@
-import { World, Vec2, Edge, Circle } from "planck-js";
+import { World, Vec2, Edge, Circle, Polygon } from "planck-js";
 import { slurp } from './util';
 
 const PX_FROM_M = 50;
@@ -60,12 +60,12 @@ export default class Controller {
 
 	physicsStep() {
 		if (this.numSteps % 10 == 0) {
-			this.addCircle();
+			this.addShape();
 		}
 		this.world.step(this.stepTime);
 	}
 
-	addCircle() {
+	addShape() {
 		const m_radius = M_FROM_PX * PX_SIZE / 10;
 		const circleBody = this.world.createBody({
 			type: 'dynamic',
@@ -78,11 +78,17 @@ export default class Controller {
 				M_FROM_PX * 1.1 * PX_SIZE
 			)
 		});
-		circleBody.createFixture(
-			Circle(m_radius), {
-				density: 1,
-				restitution: 0.2,
-			});
+		const vertices = [];
+		for (let i = 0; i < 6; i++) {
+			const angle = 2 * Math.PI * (i / 6);
+			vertices.push(
+				new Vec2(
+					m_radius * Math.cos(angle),
+					m_radius * Math.sin(angle),
+				)
+			)
+		}
+		circleBody.createFixture(new Polygon(vertices));
 	}
 
 	removeFarAwayThings() {
@@ -109,18 +115,42 @@ export default class Controller {
 			const bodyPos = body.getPosition();
 			for (var fixture = body.getFixtureList(); fixture; fixture = fixture.getNext()) {
 				const shape = fixture.getShape();
-				if (shape.getType() != 'circle') {
-					continue;
+				switch (shape.getType()) {
+					case 'circle':
+						this.renderCircle(context, bodyPos, shape);
+						break;
+					case 'polygon':
+						this.renderPolygon(context, bodyPos, shape);
 				}
-				const center = shape.getCenter();
-				const radius = shape.getRadius();
-			
-				context.beginPath();
-				context.fillStyle = 'black';
-				context.arc(bodyPos.x + center.x, bodyPos.y + center.y, radius, 0, 2 * Math.PI);
-				context.fill();
 			}
 		}
+	}
+
+	renderCircle(context, bodyPos, shape) {
+		const center = shape.getCenter();
+		const radius = shape.getRadius();
+	
+		context.beginPath();
+		context.fillStyle = 'black';
+		context.arc(bodyPos.x + center.x, bodyPos.y + center.y, radius, 0, 2 * Math.PI);
+		context.fill();
+	}
+
+	renderPolygon(context, bodyPos, shape) {
+		const vertices = shape.m_vertices;
+	
+		context.beginPath();
+		context.fillStyle = 'black';
+		for (let i = 0; i < vertices.length; i++) {
+			if (i == 0) {
+				context.moveTo(bodyPos.x + vertices[i].x, bodyPos.y + vertices[i].y)
+			}
+			else {
+				context.lineTo(bodyPos.x + vertices[i].x, bodyPos.y + vertices[i].y)
+			}
+		}
+		context.closePath();
+		context.fill();
 	}
 
 }
