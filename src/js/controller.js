@@ -5,6 +5,8 @@ const PX_FROM_M = 50;
 const M_FROM_PX = 1 / PX_FROM_M;
 const PX_SIZE = 250;
 const PX_WORLD_BOUNDARY = 1.2 * PX_SIZE;
+const M_SHAPE_INNER_RADIUS = 0.98 * M_FROM_PX * PX_SIZE / 10;
+const M_SHAPE_OUTER_RADIUS = M_SHAPE_INNER_RADIUS / Math.cos(Math.PI / 6)
 
 export default class Controller {
 
@@ -67,13 +69,12 @@ export default class Controller {
 	}
 
 	addShape() {
-		const m_radius = M_FROM_PX * PX_SIZE / 10;
 		const circleBody = this.world.createBody({
 			type: 'dynamic',
 			position: Vec2(
 				slurp(
-					-M_FROM_PX * PX_SIZE + m_radius,
-					M_FROM_PX * PX_SIZE - m_radius,
+					-M_FROM_PX * PX_SIZE + M_SHAPE_OUTER_RADIUS,
+					M_FROM_PX * PX_SIZE - M_SHAPE_OUTER_RADIUS,
 					Math.random()
 				),
 				M_FROM_PX * 1.1 * PX_SIZE
@@ -87,8 +88,8 @@ export default class Controller {
 			const angle = 2 * Math.PI * ((i + 0.45) / 6);
 			vertices.push(
 				new Vec2(
-					m_radius * Math.cos(angle),
-					m_radius * Math.sin(angle),
+					M_SHAPE_OUTER_RADIUS * Math.cos(angle),
+					M_SHAPE_OUTER_RADIUS * Math.sin(angle),
 				)
 			)
 		}
