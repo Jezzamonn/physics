@@ -59,7 +59,7 @@ export default class Controller {
 	}
 
 	physicsStep() {
-		if (this.numSteps % 10 == 0) {
+		if (this.numSteps % 10 == 0 && this.world.getBodyCount() < 30) {
 			this.addShape();
 		}
 		this.world.step(this.stepTime);
@@ -76,7 +76,8 @@ export default class Controller {
 					Math.random()
 				),
 				M_FROM_PX * 1.1 * PX_SIZE
-			)
+			),
+			angularVelocity: Math.PI / 60
 		});
 		const vertices = [];
 		for (let i = 0; i < 6; i++) {
@@ -112,41 +113,45 @@ export default class Controller {
 	render(context) {
 		context.scale(PX_FROM_M, -PX_FROM_M);
 		for (var body = this.world.getBodyList(); body; body = body.getNext()) {
+			context.save();
 			const bodyPos = body.getPosition();
+			context.translate(bodyPos.x, bodyPos.y);
+			context.rotate(body.getAngle());
 			for (var fixture = body.getFixtureList(); fixture; fixture = fixture.getNext()) {
 				const shape = fixture.getShape();
 				switch (shape.getType()) {
 					case 'circle':
-						this.renderCircle(context, bodyPos, shape);
+						this.renderCircle(context, shape);
 						break;
 					case 'polygon':
-						this.renderPolygon(context, bodyPos, shape);
+						this.renderPolygon(context, shape);
 				}
 			}
+			context.restore();
 		}
 	}
 
-	renderCircle(context, bodyPos, shape) {
+	renderCircle(context, shape) {
 		const center = shape.getCenter();
 		const radius = shape.getRadius();
 	
 		context.beginPath();
 		context.fillStyle = 'black';
-		context.arc(bodyPos.x + center.x, bodyPos.y + center.y, radius, 0, 2 * Math.PI);
+		context.arc(center.x, center.y, radius, 0, 2 * Math.PI);
 		context.fill();
 	}
 
-	renderPolygon(context, bodyPos, shape) {
+	renderPolygon(context, shape) {
 		const vertices = shape.m_vertices;
 	
 		context.beginPath();
 		context.fillStyle = 'black';
 		for (let i = 0; i < vertices.length; i++) {
 			if (i == 0) {
-				context.moveTo(bodyPos.x + vertices[i].x, bodyPos.y + vertices[i].y)
+				context.moveTo(vertices[i].x, vertices[i].y);
 			}
 			else {
-				context.lineTo(bodyPos.x + vertices[i].x, bodyPos.y + vertices[i].y)
+				context.lineTo(vertices[i].x, vertices[i].y);
 			}
 		}
 		context.closePath();
