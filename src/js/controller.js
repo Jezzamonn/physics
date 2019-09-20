@@ -78,12 +78,12 @@ export default class Controller {
 				M_FROM_PX * 1.1 * PX_SIZE
 			),
 			fixedRotation: false,
-			angularVelocity: 4 * 2 * Math.PI / 60,
+			// angularVelocity: 4 * 2 * Math.PI / 60,
 			angularDamping: 0.9
 		});
 		const vertices = [];
 		for (let i = 0; i < 6; i++) {
-			const angle = 2 * Math.PI * (i / 6);
+			const angle = 2 * Math.PI * ((i + 0.45) / 6);
 			vertices.push(
 				new Vec2(
 					m_radius * Math.cos(angle),
@@ -91,7 +91,13 @@ export default class Controller {
 				)
 			)
 		}
-		circleBody.createFixture(new Polygon(vertices));
+		circleBody.createFixture(
+			new Polygon(vertices), {
+				friction: 1,
+				restitution: 0.1,
+				density: 1
+			}
+		);
 	}
 
 	removeFarAwayThings() {
