@@ -5,7 +5,8 @@ const PX_FROM_M = 50;
 const M_FROM_PX = 1 / PX_FROM_M;
 const PX_SIZE = 250;
 const PX_WORLD_BOUNDARY = 1.2 * PX_SIZE;
-const M_SHAPE_INNER_RADIUS = 0.98 * M_FROM_PX * PX_SIZE / 10;
+const SHAPES_PER_ROW = 10;
+const M_SHAPE_INNER_RADIUS = M_FROM_PX * PX_SIZE / SHAPES_PER_ROW;
 const M_SHAPE_OUTER_RADIUS = M_SHAPE_INNER_RADIUS / Math.cos(Math.PI / 6)
 
 export default class Controller {
@@ -25,20 +26,33 @@ export default class Controller {
 			type: 'static',
 			position: Vec2(0, 0),
 		});
+		const bottomEdgeVecs = [];
+		for (let i = 0; i < 2 * SHAPES_PER_ROW + 1; i++) {
+			const isEven = (i % 2) == 0;
+			const amt = i / (2 * SHAPES_PER_ROW);
+			const point = Vec2(
+				slurp(-M_FROM_PX * PX_SIZE, M_FROM_PX * PX_SIZE, amt),
+				-M_FROM_PX * PX_SIZE + isEven ? 0 : M_SHAPE_OUTER_RADIUS / 2
+			);
+			bottomEdgeVecs.push(point);
+		}
+		bottomEdgeVecs.push(
+			Vec2(M_FROM_PX * PX_SIZE, -M_FROM_PX * PX_SIZE + 1),
+			Vec2(-M_FROM_PX * PX_SIZE, -M_FROM_PX * PX_SIZE + 1)
+		)
 		ground.createFixture({
-			shape: Edge(
-				Vec2(M_FROM_PX * -2 * PX_SIZE, -M_FROM_PX * PX_SIZE),
-				Vec2(M_FROM_PX * 2 * PX_SIZE, -M_FROM_PX * PX_SIZE))
+			shape: Polygon(bottomEdgeVecs),
+			friction: 0.4
 		});
 		ground.createFixture({
 			shape: Edge(
 				Vec2(-M_FROM_PX * PX_SIZE, M_FROM_PX * -2 * PX_SIZE),
-				Vec2(-M_FROM_PX * PX_SIZE, M_FROM_PX * 2 * PX_SIZE))
+				Vec2(-M_FROM_PX * PX_SIZE, M_FROM_PX * 2 * PX_SIZE)),
 		});
 		ground.createFixture({
 			shape: Edge(
 				Vec2(M_FROM_PX * PX_SIZE, M_FROM_PX * -2 * PX_SIZE),
-				Vec2(M_FROM_PX * PX_SIZE, M_FROM_PX * 2 * PX_SIZE))
+				Vec2(M_FROM_PX * PX_SIZE, M_FROM_PX * 2 * PX_SIZE)),
 		});
 	}
 
