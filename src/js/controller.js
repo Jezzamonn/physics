@@ -59,7 +59,8 @@ export default class Controller {
 	}
 
 	physicsStep() {
-		if (this.numSteps % 10 == 0 && this.world.getBodyCount() < 30) {
+		if (this.numSteps % 10 == 0 &&
+			this.world.getBodyCount() < 100) {
 			this.addShape();
 		}
 		this.world.step(this.stepTime);
@@ -93,7 +94,7 @@ export default class Controller {
 		}
 		circleBody.createFixture(
 			new Polygon(vertices), {
-				friction: 1,
+				friction: 0.1,
 				restitution: 0.1,
 				density: 1
 			}
