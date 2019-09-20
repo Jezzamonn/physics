@@ -22,38 +22,42 @@ export default class Controller {
 
 		this.world = World({gravity: Vec2(0, -10)})
 
-		const ground = this.world.createBody({
+		this.addWalls();
+		this.addFloor();
+	}
+
+	addWalls() {
+		const walls = this.world.createBody({
 			type: 'static',
 			position: Vec2(0, 0),
 		});
-		const bottomEdgeVecs = [];
-		for (let i = 0; i < 2 * SHAPES_PER_ROW + 1; i++) {
-			const isEven = (i % 2) == 0;
-			const amt = i / (2 * SHAPES_PER_ROW);
-			const point = Vec2(
-				slurp(-M_FROM_PX * PX_SIZE, M_FROM_PX * PX_SIZE, amt),
-				-M_FROM_PX * PX_SIZE + (isEven ? 0 : M_SHAPE_OUTER_RADIUS / 2)
-			);
-			bottomEdgeVecs.push(point);
-		}
-		bottomEdgeVecs.push(
-			Vec2(M_FROM_PX * PX_SIZE, -M_FROM_PX * PX_SIZE + 1),
-			Vec2(-M_FROM_PX * PX_SIZE, -M_FROM_PX * PX_SIZE + 1)
-		)
-		ground.createFixture({
-			shape: Polygon(bottomEdgeVecs),
-			friction: 0.4
-		});
-		ground.createFixture({
+		walls.createFixture({
 			shape: Edge(
 				Vec2(-M_FROM_PX * PX_SIZE, M_FROM_PX * -2 * PX_SIZE),
 				Vec2(-M_FROM_PX * PX_SIZE, M_FROM_PX * 2 * PX_SIZE)),
 		});
-		ground.createFixture({
+		walls.createFixture({
 			shape: Edge(
 				Vec2(M_FROM_PX * PX_SIZE, M_FROM_PX * -2 * PX_SIZE),
-				Vec2(M_FROM_PX * PX_SIZE, M_FROM_PX * 2 * PX_SIZE)),
+				Vec2(M_FROM_PX * PX_SIZE, M_FROM_PX * 2 * PX_SIZE))
 		});
+	}
+
+	addFloor() {
+		for (let i = 0; i < SHAPES_PER_ROW + 1; i++) {
+			const amt = i / SHAPES_PER_ROW;
+			const point = Vec2(
+				slurp(-M_FROM_PX * PX_SIZE, M_FROM_PX * PX_SIZE, amt),
+				-M_FROM_PX * PX_SIZE
+			);
+			const body = this.world.createBody({
+				type: 'static',
+				position: point,
+			});
+			body.createFixture({
+				shape: getHexShape(0.95 * M_SHAPE_OUTER_RADIUS)
+			});
+		}
 	}
 
 	/**
@@ -109,7 +113,8 @@ export default class Controller {
 			)
 		}
 		circleBody.createFixture(
-			new Polygon(vertices), {
+			{
+				shape: getHexShape(0.95 * M_SHAPE_OUTER_RADIUS),
 				friction: 0.1,
 				restitution: 0.1,
 				density: 1
@@ -183,4 +188,19 @@ export default class Controller {
 		context.fill();
 	}
 
+}
+
+
+function getHexShape(outerRadius) {
+	const vertices = [];
+	for (let i = 0; i < 6; i++) {
+		const angle = 2 * Math.PI * ((i + 0.5) / 6);
+		vertices.push(
+			new Vec2(
+				outerRadius * Math.cos(angle),
+				outerRadius * Math.sin(angle),
+			)
+		)
+	}
+	return Polygon(vertices);
 }
