@@ -77,7 +77,9 @@ export default class Controller {
 				),
 				M_FROM_PX * 1.1 * PX_SIZE
 			),
-			angularVelocity: Math.PI / 60
+			fixedRotation: false,
+			angularVelocity: 4 * 2 * Math.PI / 60,
+			angularDamping: 0.9
 		});
 		const vertices = [];
 		for (let i = 0; i < 6; i++) {
