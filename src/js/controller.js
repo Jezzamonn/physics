@@ -59,7 +59,7 @@ export default class Controller {
 			const amt = i / SHAPES_PER_ROW;
 			const point = Vec2(
 				slurp(-M_FROM_PX * PX_SIZE, M_FROM_PX * PX_SIZE, amt),
-				-M_FROM_PX * PX_SIZE
+				0
 			);
 			const body = this.world.createBody({
 				type: 'static',
@@ -91,8 +91,7 @@ export default class Controller {
 	}
 
 	physicsStep() {
-		if (this.numSteps % TICKS_PER_SHAPE == 0 &&
-			this.world.getBodyCount() < 100) {
+		if (this.numSteps % TICKS_PER_SHAPE == 0) {
 			this.addShape();
 		}
 		this.world.step(this.stepTime);
