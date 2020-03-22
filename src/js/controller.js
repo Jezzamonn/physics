@@ -45,12 +45,12 @@ export default class Controller {
 		walls.createFixture({
 			shape: Edge(
 				Vec2(-M_FROM_PX * PX_SIZE, M_FROM_PX * -2 * PX_SIZE),
-				Vec2(-M_FROM_PX * PX_SIZE, M_FROM_PX * 2 * PX_SIZE)),
+				Vec2(-M_FROM_PX * PX_SIZE, M_FROM_PX * 100 * PX_SIZE)),
 		});
 		walls.createFixture({
 			shape: Edge(
 				Vec2(M_FROM_PX * PX_SIZE, M_FROM_PX * -2 * PX_SIZE),
-				Vec2(M_FROM_PX * PX_SIZE, M_FROM_PX * 2 * PX_SIZE))
+				Vec2(M_FROM_PX * PX_SIZE, M_FROM_PX * 100 * PX_SIZE))
 		});
 	}
 
@@ -158,6 +158,9 @@ export default class Controller {
 		context.scale(PX_FROM_M, -PX_FROM_M);
 		context.translate(0, -3 * M_SHAPE_OUTER_RADIUS * subLoopAmt);
 		for (var body = this.world.getBodyList(); body; body = body.getNext()) {
+			if (!body.isAwake) {
+				continue;
+			}
 			context.save();
 			const bodyPos = body.getPosition();
 			context.translate(bodyPos.x, bodyPos.y);
