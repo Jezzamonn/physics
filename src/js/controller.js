@@ -5,6 +5,8 @@ const PX_FROM_M = 50;
 const M_FROM_PX = 1 / PX_FROM_M;
 const PX_SIZE = 250;
 const PX_WORLD_BOUNDARY = 1.2 * PX_SIZE;
+const STEPS_PER_SECOND = 60;
+const TICKS_PER_SHAPE = 10;
 const SHAPES_PER_ROW = 10;
 const SHAPES_PER_SUBLOOP = 19;
 const M_SHAPE_INNER_RADIUS = M_FROM_PX * PX_SIZE / SHAPES_PER_ROW;
@@ -18,7 +20,7 @@ export default class Controller {
 
 		this.lastStep = 0;
 		this.timeCount = 0;
-		this.stepTime = 1 / 60;
+		this.stepTime = 1 / STEPS_PER_SECOND;
 		this.numSteps = 0;
 
 		this.rng = seededRandom("qertjioflkasndq");
@@ -89,7 +91,7 @@ export default class Controller {
 	}
 
 	physicsStep() {
-		if (this.numSteps % 10 == 0 &&
+		if (this.numSteps % TICKS_PER_SHAPE == 0 &&
 			this.world.getBodyCount() < 100) {
 			this.addShape();
 		}
@@ -153,7 +155,9 @@ export default class Controller {
 	 * @param {!CanvasRenderingContext2D} context
 	 */
 	render(context) {
+		const subLoopAmt = ((this.timeCount * STEPS_PER_SECOND) / TICKS_PER_SHAPE) / SHAPES_PER_SUBLOOP;
 		context.scale(PX_FROM_M, -PX_FROM_M);
+		context.translate(0, -3 * M_SHAPE_OUTER_RADIUS * subLoopAmt);
 		for (var body = this.world.getBodyList(); body; body = body.getNext()) {
 			context.save();
 			const bodyPos = body.getPosition();
