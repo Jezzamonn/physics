@@ -97,6 +97,7 @@ export default class Controller {
 	}
 
 	addShape() {
+		const subLoopAmt = this.numShapes / SHAPES_PER_SUBLOOP;
 		const circleBody = this.world.createBody({
 			type: 'dynamic',
 			position: Vec2(
@@ -105,7 +106,7 @@ export default class Controller {
 					M_FROM_PX * PX_SIZE - M_SHAPE_OUTER_RADIUS,
 					this.positions[this.numShapes % SHAPES_PER_SUBLOOP]
 				),
-				M_FROM_PX * 1.1 * PX_SIZE
+				(M_FROM_PX * 1.1 * PX_SIZE) + (3 * M_SHAPE_OUTER_RADIUS * subLoopAmt)
 			),
 			fixedRotation: false,
 			// angularVelocity: 4 * 2 * Math.PI / 60,
