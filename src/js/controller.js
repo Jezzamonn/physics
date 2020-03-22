@@ -1,11 +1,12 @@
 import { World, Vec2, Edge, Circle, Polygon } from "planck-js";
-import { slurp } from './util';
+import { slurp, seededRandom } from './util';
 
 const PX_FROM_M = 50;
 const M_FROM_PX = 1 / PX_FROM_M;
 const PX_SIZE = 250;
 const PX_WORLD_BOUNDARY = 1.2 * PX_SIZE;
 const SHAPES_PER_ROW = 10;
+const SHAPES_PER_SUBLOOP = 19;
 const M_SHAPE_INNER_RADIUS = M_FROM_PX * PX_SIZE / SHAPES_PER_ROW;
 const M_SHAPE_OUTER_RADIUS = M_SHAPE_INNER_RADIUS / Math.cos(Math.PI / 6)
 
@@ -20,7 +21,15 @@ export default class Controller {
 		this.stepTime = 1 / 60;
 		this.numSteps = 0;
 
+		this.rng = seededRandom("qertjioflkasndq");
+		this.positions = [];
+		for (let i = 0; i < SHAPES_PER_SUBLOOP; i++) {
+			this.positions.push(this.rng());
+		}
+
 		this.world = World({gravity: Vec2(0, -10)})
+
+		this.numShapes = 0;
 
 		this.addWalls();
 		this.addFloor();
@@ -94,7 +103,7 @@ export default class Controller {
 				slurp(
 					-M_FROM_PX * PX_SIZE + M_SHAPE_OUTER_RADIUS,
 					M_FROM_PX * PX_SIZE - M_SHAPE_OUTER_RADIUS,
-					Math.random()
+					this.positions[this.numShapes % SHAPES_PER_SUBLOOP]
 				),
 				M_FROM_PX * 1.1 * PX_SIZE
 			),
@@ -120,6 +129,8 @@ export default class Controller {
 				density: 1
 			}
 		);
+
+		this.numShapes++;
 	}
 
 	removeFarAwayThings() {
