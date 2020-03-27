@@ -4,11 +4,12 @@ import { slurp, seededRandom } from './util';
 const PX_FROM_M = 50;
 const M_FROM_PX = 1 / PX_FROM_M;
 const PX_SIZE = 250;
-const PX_WORLD_BOUNDARY = 1.2 * PX_SIZE;
+const PX_WALL_SIZE = 1.2 * PX_SIZE;
+const PX_WORLD_BOUNDARY = 1.2 * PX_WALL_SIZE;
 const STEPS_PER_SECOND = 60;
 const TICKS_PER_SHAPE = 10;
 const SHAPES_PER_ROW = 10;
-const M_SHAPE_INNER_RADIUS = M_FROM_PX * PX_SIZE / SHAPES_PER_ROW;
+const M_SHAPE_INNER_RADIUS = M_FROM_PX * PX_WALL_SIZE / SHAPES_PER_ROW;
 const M_SHAPE_OUTER_RADIUS = M_SHAPE_INNER_RADIUS / Math.cos(Math.PI / 6)
 
 export default class Controller {
@@ -39,13 +40,13 @@ export default class Controller {
 		});
 		walls.createFixture({
 			shape: Edge(
-				Vec2(-M_FROM_PX * PX_SIZE, M_FROM_PX * -2 * PX_SIZE),
-				Vec2(-M_FROM_PX * PX_SIZE, M_FROM_PX * 100 * PX_SIZE)),
+				Vec2(-M_FROM_PX * PX_WALL_SIZE, M_FROM_PX * -2 * PX_SIZE),
+				Vec2(-M_FROM_PX * PX_WALL_SIZE, M_FROM_PX * 100 * PX_SIZE)),
 		});
 		walls.createFixture({
 			shape: Edge(
-				Vec2(M_FROM_PX * PX_SIZE, M_FROM_PX * -2 * PX_SIZE),
-				Vec2(M_FROM_PX * PX_SIZE, M_FROM_PX * 100 * PX_SIZE))
+				Vec2(M_FROM_PX * PX_WALL_SIZE, M_FROM_PX * -2 * PX_SIZE),
+				Vec2(M_FROM_PX * PX_WALL_SIZE, M_FROM_PX * 100 * PX_SIZE))
 		});
 	}
 
@@ -53,7 +54,7 @@ export default class Controller {
 		for (let i = 0; i < SHAPES_PER_ROW + 1; i++) {
 			const amt = i / SHAPES_PER_ROW;
 			const point = Vec2(
-				slurp(-M_FROM_PX * PX_SIZE, M_FROM_PX * PX_SIZE, amt),
+				slurp(-M_FROM_PX * PX_WALL_SIZE, M_FROM_PX * PX_WALL_SIZE, amt),
 				-M_FROM_PX * PX_SIZE
 			);
 			const body = this.world.createBody({
@@ -98,8 +99,8 @@ export default class Controller {
 			type: 'dynamic',
 			position: Vec2(
 				slurp(
-					-M_FROM_PX * PX_SIZE + M_SHAPE_OUTER_RADIUS,
-					M_FROM_PX * PX_SIZE - M_SHAPE_OUTER_RADIUS,
+					-M_FROM_PX * PX_WALL_SIZE + M_SHAPE_OUTER_RADIUS,
+					M_FROM_PX * PX_WALL_SIZE - M_SHAPE_OUTER_RADIUS,
 					this.rng()
 				),
 				(M_FROM_PX * 1.1 * PX_SIZE) + mDropHeight
@@ -149,6 +150,17 @@ export default class Controller {
 	 * @param {!CanvasRenderingContext2D} context
 	 */
 	render(context) {
+		// Render reference border
+		const borderPos = 251;
+		context.beginPath();
+		context.strokeStyle = '#EEE';
+		context.moveTo(-borderPos, -borderPos);
+		context.lineTo(-borderPos, borderPos);
+		context.lineTo(borderPos, borderPos);
+		context.lineTo(borderPos, -borderPos);
+		context.closePath();
+		context.stroke();
+
 		context.scale(PX_FROM_M, -PX_FROM_M);
 		for (var body = this.world.getBodyList(); body; body = body.getNext()) {
 			if (!body.isAwake) {
