@@ -87,7 +87,7 @@ export default class Controller {
 	}
 
 	physicsStep() {
-		if (this.numSteps % TICKS_PER_SHAPE == 0 && this.numShapes < 100) {
+		if (this.numSteps % TICKS_PER_SHAPE == 0 && this.numShapes < 150) {
 			this.addShape();
 		}
 		this.world.step(this.stepTime);
