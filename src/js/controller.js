@@ -192,8 +192,8 @@ export default class Controller {
 		for (let i = 0; i < vertices.length; i++) {
 			const diffX = centerX - vertices[i].x;
 			const diffY = centerY - vertices[i].y;
-			const drawX = centerX + 1.08 * diffX;
-			const drawY = centerY + 1.08 * diffY;
+			const drawX = centerX + 1.1 * diffX;
+			const drawY = centerY + 1.1 * diffY;
 			if (i == 0) {
 				context.moveTo(drawX, drawY);
 			}
