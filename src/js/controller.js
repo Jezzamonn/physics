@@ -6,14 +6,14 @@ const DEFAULT_STEP_TIME = 1 / (30 * 5 * 2);
 export default class Controller {
 
 	constructor() {
-		this.timeToFill = 20;
+		this.timeToFill = 22;
 		this.numLayers = 2;
 		this.numSims = 2 * this.numLayers;
 
 		// two colors = takes twice this time to fill.
 		this.period = 2 * (this.timeToFill / this.numLayers);
 
-		this.seeds = ['qertjioflk5afndqsdd', 'qarifjdsnklvpaiorejwfsd']
+		this.seeds = ['uhjlkgffdsfgsdfshdjfkgl;', 'qarifjdsnklvpaiorejwsd']
 
 		this.lastStep = 0;
 		this.realTimeCount = 0;
