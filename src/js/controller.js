@@ -1,6 +1,6 @@
 import { PhysicsSim } from "./physics-sim";
 
-const DEFAULT_STEP_TIME = 1 / 60;
+const DEFAULT_STEP_TIME = 1 / (30 * 4 * 2);
 
 export default class Controller {
 

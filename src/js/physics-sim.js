@@ -11,7 +11,7 @@ const SHAPES_PER_ROW = 10;
 const M_SHAPE_INNER_RADIUS = M_FROM_PX * PX_WALL_SIZE / SHAPES_PER_ROW;
 const M_SHAPE_OUTER_RADIUS = M_SHAPE_INNER_RADIUS / Math.cos(Math.PI / 6)
 
-const TICKS_PER_SHAPE = 10;
+const TIME_PER_SHAPE = 10 * (1 / 60);
 
 export class PhysicsSim {
     constructor() {
@@ -19,19 +19,20 @@ export class PhysicsSim {
 		this.world = World({gravity: Vec2(0, -10)})
 
 		this.numShapes = 0;
-		this.numSteps = 0;
+		this.shapeCount = 0;
 
         this.addWalls();
 		this.addFloor();
     }
 
 	physicsStep(stepTime) {
-		if (this.numSteps % TICKS_PER_SHAPE == 0 && this.numShapes < 150) {
-			this.addShape();
+		if (this.shapeCount > 0 && this.numShapes < 150) {
+            this.addShape();
+            this.shapeCount -= TIME_PER_SHAPE;
 		}
         this.world.step(stepTime);
 
-        this.numSteps ++;
+        this.shapeCount += stepTime;
     }
     
     // ------------ Adding / Removing Physics Stuff ------------
