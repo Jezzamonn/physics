@@ -1,7 +1,7 @@
 import { World, Vec2, Edge, Polygon } from "planck-js";
 import { slurp, seededRandom } from './util';
 
-const PX_FROM_M = 50;
+const PX_FROM_M = 40;
 const M_FROM_PX = 1 / PX_FROM_M;
 const PX_SIZE = 250;
 
@@ -15,7 +15,7 @@ const TIME_PER_SHAPE = 10 * (1 / 60);
 
 export class PhysicsSim {
     constructor() {
-        this.rng = seededRandom("qertjioflk5afndq");
+        this.rng = seededRandom("qertjioflk5afndqsdd");
 		this.world = World({gravity: Vec2(0, -10)})
 
 		this.numShapes = 0;
@@ -67,7 +67,7 @@ export class PhysicsSim {
 			const amt = i / SHAPES_PER_ROW;
 			const point = Vec2(
 				slurp(-M_FROM_PX * PX_WALL_SIZE, M_FROM_PX * PX_WALL_SIZE, amt),
-				-M_FROM_PX * PX_SIZE
+				-M_FROM_PX * PX_WALL_SIZE
 			);
 			const body = this.world.createBody({
 				type: 'static',
@@ -89,7 +89,7 @@ export class PhysicsSim {
 					M_FROM_PX * PX_WALL_SIZE - M_SHAPE_OUTER_RADIUS,
 					this.rng()
 				),
-				(M_FROM_PX * 1.1 * PX_SIZE) + mDropHeight
+				(M_FROM_PX * 1.2 * PX_SIZE) + mDropHeight
 			),
 			fixedRotation: false,
 			// angularVelocity: 4 * 2 * Math.PI / 60,
