@@ -1,6 +1,6 @@
 import { PhysicsSim } from "./physics-sim";
 
-const STEPS_PER_SECOND = 60;
+const DEFAULT_STEP_TIME = 1 / 60;
 
 export default class Controller {
 
@@ -10,7 +10,7 @@ export default class Controller {
 
 		this.lastStep = 0;
 		this.timeCount = 0;
-		this.stepTime = 1 / STEPS_PER_SECOND;
+		this.stepTime = DEFAULT_STEP_TIME;
 
 		this.physicsSim = new PhysicsSim();
 	}
