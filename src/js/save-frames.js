@@ -24,9 +24,16 @@ function renderFrame(context, controller, width, height) {
 }
 
 function averageImageDatas(imageDatas, outImageData) {
+    const frameWeights = [
+        0.1,
+        0.2,
+        0.4,
+        0.2,
+        0.1,
+    ]
     for (let i = 0; i < outImageData.data.length; i ++) {
-        let sum = imageDatas.map(imageData => imageData.data[i]).reduce((a, b) => a + b, 0);
-        outImageData.data[i] = sum / imageDatas.length;
+        let sum = imageDatas.map(imageData => imageData.data[i]).reduce((prev, curr, frame) => prev + curr * frameWeights[frame], 0);
+        outImageData.data[i] = sum;
     }
     return outImageData;
 }
@@ -122,7 +129,7 @@ function main() {
         width: args['width'],
         height: args['height'],
         fps: 30,
-        numSubFrames: 4,
+        numSubFrames: 5,
         length: controller.period,
         startTime: args['start'],
     }

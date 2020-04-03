@@ -1,7 +1,7 @@
 import { PhysicsSim } from "./physics-sim";
 import { seededRandom } from "./util";
 
-const DEFAULT_STEP_TIME = 1 / (30 * 4 * 2);
+const DEFAULT_STEP_TIME = 1 / (30 * 5 * 2);
 
 export default class Controller {
 
