@@ -12,7 +12,15 @@ export default class Controller {
 		this.timeCount = 0;
 		this.stepTime = DEFAULT_STEP_TIME;
 
-		this.physicsSim = new PhysicsSim();
+		this.physicsSims = [];
+		for (let i = 0; i < 2; i++) {
+			const physicsSim = new PhysicsSim();
+			physicsSim.color = (i % 2 == 0) ? 'black' : 'white';
+			
+			physicsSim.delayCount = i * 1;
+
+			this.physicsSims.push(physicsSim);
+		}
 	}
 
 	/**
@@ -34,7 +42,9 @@ export default class Controller {
 	}
 
 	physicsStep() {
-		this.physicsSim.physicsStep(this.stepTime);
+		for (const physicsSim of this.physicsSims) {
+			physicsSim.physicsStep(this.stepTime);
+		}
 	}
 
 	/**
@@ -54,7 +64,9 @@ export default class Controller {
 		context.closePath();
 		context.stroke();
 
-		this.physicsSim.render(context);
+		for (const physicsSim of this.physicsSims) {
+			physicsSim.render(context);
+		}
 	}
 
 }

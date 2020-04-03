@@ -19,20 +19,28 @@ export class PhysicsSim {
 		this.world = World({gravity: Vec2(0, -10)})
 
 		this.numShapes = 0;
-		this.shapeCount = 0;
+        this.shapeCount = 0;
+        this.color = 'black';
+
+        this.delayCount = 0;
 
         this.addWalls();
 		this.addFloor();
     }
 
 	physicsStep(stepTime) {
-		if (this.shapeCount > 0 && this.numShapes < 150) {
+        if (this.delayCount > 0) {
+            this.delayCount -= stepTime;
+            return;
+        }
+
+		if (this.shapeCount <= 0 && this.numShapes < 150) {
             this.addShape();
-            this.shapeCount -= TIME_PER_SHAPE;
+            this.shapeCount += TIME_PER_SHAPE;
 		}
         this.world.step(stepTime);
 
-        this.shapeCount += stepTime;
+        this.shapeCount -= stepTime;
     }
     
     // ------------ Adding / Removing Physics Stuff ------------
@@ -160,7 +168,7 @@ export class PhysicsSim {
 		const centerY = shape.m_centroid.y;
 
 		context.beginPath();
-		context.fillStyle = 'black';
+		context.fillStyle = this.color;
 		for (let i = 0; i < vertices.length; i++) {
 			const diffX = centerX - vertices[i].x;
 			const diffY = centerY - vertices[i].y;

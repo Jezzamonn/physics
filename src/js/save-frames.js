@@ -126,7 +126,6 @@ function main() {
         length: controller.period,
         startTime: args['start'],
     }
-    controller.stepTime = 1 / (options.fps * options.numSubFrames * 2);
 
     if (args['single_frame']) {
         generateSingleFrame(controller, options, args['out']);
