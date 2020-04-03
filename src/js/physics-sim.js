@@ -15,7 +15,7 @@ const TIME_PER_SHAPE = 10 * (1 / 60);
 
 export class PhysicsSim {
     constructor() {
-        this.rng = seededRandom("qertjioflkasndq");
+        this.rng = seededRandom("qertjioflk5afndq");
 		this.world = World({gravity: Vec2(0, -10)})
 
 		this.numShapes = 0;
