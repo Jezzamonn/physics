@@ -1,4 +1,5 @@
 import { PhysicsSim } from "./physics-sim";
+import { seededRandom } from "./util";
 
 const DEFAULT_STEP_TIME = 1 / (30 * 4 * 2);
 
@@ -11,6 +12,8 @@ export default class Controller {
 
 		// two colors = takes twice this time to fill.
 		this.period = 2 * (this.timeToFill / this.numLayers);
+
+		this.seeds = ['qertjioflk5afndqsdd', 'qarifjdsnklvpaiorejwfsd']
 
 		this.lastStep = 0;
 		this.realTimeCount = 0;
@@ -26,9 +29,11 @@ export default class Controller {
 		this.physicsSims = [];
 		for (let i = 0; i < this.numSims; i++) {
 			const layerAmt = i / this.numLayers;
+			const layerIndex = i % this.numLayers;
 			const physicsSim = new PhysicsSim();
+
 			physicsSim.color = (i % 2 == 0) ? 'black' : 'white';
-			
+			physicsSim.rng = seededRandom(this.seeds[layerIndex]);
 			physicsSim.delayCount = layerAmt * this.timeToFill;
 
 			this.physicsSims.push(physicsSim);
